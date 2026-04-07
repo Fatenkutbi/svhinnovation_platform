@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="rtl" dir="rtl">
+    <h2 class="text-3xl font-bold text-[#0E506C] mb-8 border-r-8 border-[#608C9E] pr-5">لوحة التحكم والمؤشرات التحليلية</h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        
+        <div class="lg:col-span-2 bg-white p-8 rounded-3xl shadow-xl border border-blue-50">
+            <h3 class="text-xl font-bold text-[#0E506C] mb-6 flex items-center gap-3">
+                <i class="fas fa-chart-line text-[#608C9E]"></i> 
+                تحليل المشاركات حسب الإدارة
+            </h3>
+            <div class="relative h-[350px]">
+                <canvas id="innovationChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-[#0E506C] to-[#608C9E] p-10 rounded-3xl shadow-2xl text-white flex flex-col justify-center items-center text-center relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+            <i class="fas fa-lightbulb fa-4x mb-6 text-[#D1EAF4] animate-pulse"></i>
+            <p class="text-lg font-medium opacity-90 mb-2">إجمالي الأفكار والتحديات المرفوعة</p>
+            <h3 class="text-7xl font-black mb-4">{{ total }}</h3>
+            <span class="bg-white/20 backdrop-blur-md px-6 py-2 rounded-full text-sm font-bold border border-white/30">
+                مبادرة نشطة حالياً
+            </span>
+        </div>
+    </div>
+
+    <h3 class="text-2xl font-bold text-[#0E506C] mb-8 flex items-center gap-3">
+        <i class="fas fa-th-large text-[#608C9E]"></i>
+        توزيع المبادرات تفصيلياً
+    </h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for dept in dept_stats %}
+        <div class="bg-white p-6 rounded-2xl shadow-md border-b-4 border-[#608C9E] hover:border-[#0E506C] hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
+            <div class="flex justify-between items-center">
+                <div class="space-y-3">
+                    <h4 class="text-[#608C9E] text-sm font-black group-hover:text-[#0E506C] transition-colors leading-relaxed">
+                        {{ dept.name }}
+                    </h4>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-4xl font-black text-[#0E506C]">{{ dept.count }}</span>
+                        <span class="text-xs text-gray-400 font-bold">مشاركة</span>
+                    </div>
+                </div>
+                <div class="bg-[#D1EAF4] text-[#0E506C] p-5 rounded-2xl group-hover:bg-[#0E506C] group-hover:text-white transition-all duration-500 shadow-inner">
+                    <i class="fas {{ dept.icon }} fa-2x"></i>
+                </div>
+            </div>
+            <div class="mt-6 w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-[#608C9E] h-full rounded-full group-hover:bg-[#0E506C] transition-all duration-1000" style="width: {% if total > 0 %}{{ dept.count|add:0|divisibleby:total }}%{% else %}0%{% endif %}"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // استقبال البيانات من Django كـ JSON آمن
+        const rawLabels = {{ chart_labels|safe }};
+        const rawData = {{ chart_data|safe }};
+
+        const ctx = document.getElementById('innovationChart').getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: rawLabels,
+                datasets: [{
+                    label: 'عدد المبادرات',
+                    data: rawData,
+                    backgroundColor: 'rgba(96, 140, 158, 0.7)', // #608C9E مع شفافية
+                    borderColor: '#0E506C',
+                    borderWidth: 2,
+                    borderRadius: 10,
+                    hoverBackgroundColor: '#0E506C',
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                indexAxis: 'x', // 'y' إذا أردتِ الأعمدة عرضية
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#0E506C',
+                        titleFont: { family: 'Tajawal', size: 14 },
+                        bodyFont: { family: 'Tajawal', size: 13 },
+                        padding: 12,
+                        cornerRadius: 10,
+                        displayColors: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        ticks: { font: { family: 'Tajawal', weight: 'bold' } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { family: 'Tajawal', size: 11 } }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

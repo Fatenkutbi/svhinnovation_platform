@@ -1,0 +1,169 @@
+{% load static %}
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}منصة الابتكار{% endblock %}</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    .backdrop { background: rgba(2,6,23,.45); }
+  </style>
+</head>
+
+<body class="bg-sky-50 text-slate-900">
+
+  <!-- HEADER -->
+  <header class="fixed top-0 left-0 right-0 z-50">
+
+  <!-- الشريط العلوي -->
+  <div class="h-14 bg-[#154E6F]">
+    <div class="h-full max-w-[1200px] mx-auto px-4 flex items-center justify-between">
+
+      <!-- ✅ يمين: الشعار ثم النص -->
+      <div class="flex items-center gap-3">
+        <img src="{% static 'innovation/img/شعار وزارة الصحة.png' %}"
+             alt="شعار وزارة الصحة"
+             class="h-24 md:h-28 w-auto object-contain"
+             onerror="this.style.display='none'">
+
+        <div class="text-right leading-tight text-white">
+          <div class="font-extrabold text-base md:text-lg">منصة إدارة الابتكار</div>
+          <div class="text-xs md:text-sm opacity-90">مستشفى صحة الافتراضي</div>
+        </div>
+      </div>
+
+      <!-- ✅ يسار: روابط + زر القائمة -->
+      <div class="flex items-center gap-4">
+        {% if request.path == "/" %}
+          <nav class="hidden md:flex items-center gap-6 text-white text-sm font-semibold">
+            <a href="#about" class="hover:opacity-80">عن المنصة</a>
+            <a href="#how" class="hover:opacity-80">كيف تعمل</a>
+          </nav>
+        {% endif %}
+
+        <button id="menuBtn"
+                class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-white/10 text-white"
+                aria-label="فتح القائمة">
+          ☰
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ✅ الشريط الجانبي الأيسر -->
+  <div class="fixed top-14 left-0 w-14 h-[calc(100vh-56px)] bg-[#154E6F]"></div>
+</header>
+
+<!-- Drawer overlay -->
+<div id="drawerOverlay" class="hidden fixed inset-0 z-50 backdrop"></div>
+
+<!-- Drawer -->
+<aside id="drawer"
+       class="hidden fixed top-0 right-0 z-50 h-full w-80 max-w-[85vw] bg-white shadow-2xl border-l border-slate-200">
+  <div class="p-4 flex items-center justify-between border-b border-slate-100">
+    <div class="font-bold text-slate-900">القائمة</div>
+    <button id="drawerClose"
+            class="px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50"
+            aria-label="إغلاق">
+      ✕
+    </button>
+  </div>
+
+  <div class="p-4 space-y-2">
+    {% if request.path == "/" %}
+      <a href="#about" class="block px-4 py-3 rounded-2xl hover:bg-slate-50">عن المنصة</a>
+      <a href="#how" class="block px-4 py-3 rounded-2xl hover:bg-slate-50">كيف تعمل</a>
+      <div class="h-px bg-slate-100 my-2"></div>
+    {% endif %}
+<a href="{% url 'platform2:board' %}" class="block px-4 py-3 rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
+  🧩 لوحة البورد
+</a>
+
+ <a href="{% url 'platform2:submit' %}" class="block px-4 py-3 rounded-2xl bg-sky-600 text-white hover:bg-sky-700">
+  ➕ إضافة مشاركة
+</a>
+
+   <a href="{% url 'platform2:home' %}"
+     class="block w-full px-4 py-3 rounded-2xl bg-red-500 text-white hover:bg-red-600 text-center font-semibold">
+    ⬅️ العودة لصفحة الرئيسية
+  </a>
+
+  </div>
+</aside>
+
+<!-- ✅ محتوى الصفحات -->
+<main class="pt-14 pl-14">
+  {% block body %}{% endblock %}
+</main>
+
+<script>
+  const menuBtni = document.getElementById("menuBtn");
+  const draweri = document.getElementById("drawer");
+  const overlayi = document.getElementById("drawerOverlay");
+  const closeBtni = document.getElementById("drawerClose");
+
+  function openDrawer() {
+    drawer.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  }
+  function closeDrawer() {
+    drawer.classList.add("hidden");
+    overlay.classList.add("hidden");
+    document.body.style.overflow = "";
+  }
+
+  menuBtn?.addEventListener("click", openDrawer);
+  closeBtn?.addEventListener("click", closeDrawer);
+  overlay?.addEventListener("click", closeDrawer);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDrawer();
+  });
+</script>
+
+
+<footer class="border-t border-sky-100 bg-white">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-600 flex flex-col md:flex-row gap-3 justify-between">
+      <div>© جميع الحقوق محفوظة لمستشفى صحة الافتراضي</div>
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-sky-700">سياسة الخصوصية</a>
+        <a href="#" class="hover:text-sky-700">الدعم</a>
+        <a href="#" class="hover:text-sky-700">تواصل معنا</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const drawer = document.getElementById("drawer");
+    const overlay = document.getElementById("drawerOverlay");
+    const closeBtn = document.getElementById("drawerClose");
+
+    function openDrawer() {
+      drawer.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeDrawer() {
+      drawer.classList.add("hidden");
+      overlay.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    menuBtn?.addEventListener("click", openDrawer);
+    closeBtn?.addEventListener("click", closeDrawer);
+    overlay?.addEventListener("click", closeDrawer);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeDrawer();
+    });
+  </script>
+
+</body>
+</html>

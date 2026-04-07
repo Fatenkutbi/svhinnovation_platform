@@ -1,0 +1,311 @@
+{% extends "innovation/base.html" %}
+{% block title %}لوحة الابتكار{% endblock %}
+
+{% block body %}
+<section class="max-w-6xl mx-auto px-4 py-8">
+
+  <div class="flex items-center justify-between gap-3 mb-4">
+
+<a href="{% url 'platform2:home' %}" class="px-4 py-2 rounded-xl bg-white border border-sky-200 hover:bg-sky-50 text-sm">
+  ← رجوع للرئيسية
+</a>
+
+    <!-- أزرار الإضافة -->
+   <div class="flex gap-2">
+  <a href="{% url 'platform2:board_add_challenge' %}"
+     class="px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700">
+    ➕ إضافة تحدي/مشكلة
+  </a>
+
+  <a href="{% url 'platform2:board_add_idea' %}"
+     class="px-4 py-2 rounded-xl bg-white border border-sky-200 hover:bg-sky-50">
+    ➕ إضافة فكرة/حل
+  </a>
+</div>
+
+  </div>
+
+  <!-- أدوات الزوم -->
+  <div class="flex items-center gap-2 mb-3">
+    <button id="zoomIn" class="px-3 py-2 rounded-lg border border-sky-200 bg-white">+</button>
+    <button id="zoomOut" class="px-3 py-2 rounded-lg border border-sky-200 bg-white">-</button>
+    <button id="zoomReset" class="px-3 py-2 rounded-lg border border-sky-200 bg-white">Reset</button>
+    <div class="text-sm text-slate-500">اسحبي الكروت لتحريكها. الزوم للتقريب/التبعيد.</div>
+  </div>
+
+  <!-- Canvas -->
+  <div class="relative w-full h-[70vh] bg-white border border-sky-100 rounded-3xl overflow-hidden">
+    <div id="canvas" class="absolute inset-0">
+      <div id="stage" class="absolute inset-0 origin-top-left" style="transform: translate(0px,0px) scale(1);">
+
+        {% for c in cards %}
+    <div class="card cursor-move select-none absolute bg-sky-50 border border-sky-200 rounded-2xl shadow-sm p-4"
+         data-id="{{ c.id }}"
+         style="left:{{ c.pos_x }}px; top:{{ c.pos_y }}px; width:{{ c.width }}px; height:{{ c.height }}px;">
+        
+            <!-- الهيدر داخل الكرت -->
+            <div class="flex items-start justify-between gap-2 mb-3">
+
+              <div class="text-[11px] text-slate-500 leading-5">
+                <div class="font-semibold text-slate-700">
+                  {{ c.get_submission_type_display }}
+                  <span class="text-slate-400">•</span>
+                  {{ c.created_at|date:"d-m-Y" }}
+                </div>
+
+                <div class="mt-1 flex flex-wrap gap-1">
+
+                  <span class="px-2 py-0.5 rounded-full bg-white border border-sky-100">
+                    {{ c.department|default:"-" }}
+                  </span>
+
+                  <span class="px-2 py-0.5 rounded-full bg-white border border-sky-100">
+                    {{ c.get_domain_display|default:"-" }}
+                  </span>
+
+                  <span class="px-2 py-0.5 rounded-full bg-white border border-sky-100">
+                    {{ c.get_impact_display|default:"-" }}
+                  </span>
+
+                  {% if c.submission_type == "idea" %}
+                    <span class="px-2 py-0.5 rounded-full bg-white border border-sky-100">
+                      إطلاق: {{ c.idea_launch_date|date:"d-m-Y"|default:"-" }}
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full bg-white border border-sky-100">
+                      {{ c.get_status_display|default:"-" }}
+                    </span>
+                  {% else %}
+                    <span class="px-2 py-0.5 rounded-full bg-white border border-sky-100">
+                      تاريخ التحدي: {{ c.challenge_date|date:"d-m-Y"|default:"-" }}
+                    </span>
+                  {% endif %}
+
+                </div>
+              </div>
+
+              <div class="flex gap-2">
+                <button type="button"
+                        class="checkBtn px-2 py-1 rounded-lg text-xs border
+                        {% if c.is_checked %} bg-green-600 text-white border-green-600 {% else %} bg-white border-sky-200 {% endif %}">
+                  ✅
+                </button>
+
+                <button type="button"
+                        class="deleteBtn px-2 py-1 rounded-lg text-xs border bg-white border-sky-200 hover:bg-red-50">
+                  ❌
+                </button>
+              </div>
+            </div>
+
+            <!-- محتوى البورد داخل الكرت -->
+            <div class="grid grid-cols-3 gap-3 h-[calc(100%-28px)]">
+
+              <!-- العمود 2 -->
+              <div class="col-span-1 flex flex-col gap-3">
+                <div class="bg-white border border-sky-100 rounded-xl p-2 overflow-auto">
+                  <div class="text-[11px] text-slate-500 mb-1">
+                    {% if c.submission_type == "challenge" %}عنوان التحدي{% else %}اسم الفكرة{% endif %}
+                  </div>
+                  <div class="text-sm">
+                    {% if c.submission_type == "challenge" %}
+                      {{ c.challenge_title|default:"-" }}
+                    {% else %}
+                      {{ c.idea_name|default:"-" }}
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="bg-white border border-sky-100 rounded-xl p-2 overflow-auto flex-1">
+                  <div class="text-[11px] text-slate-500 mb-1">
+                    {% if c.submission_type == "challenge" %}الحل المقترح{% else %}قائد الفكرة{% endif %}
+                  </div>
+                  <div class="text-sm">
+                    {% if c.submission_type == "challenge" %}
+                      {{ c.suggested_solution|default:"-" }}
+                    {% else %}
+                      {{ c.idea_leader_or_team|default:"-" }}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <!-- العمود 1 -->
+              <div class="col-span-1 bg-white border border-sky-100 rounded-xl p-2 overflow-auto">
+                <div class="text-[11px] text-slate-500 mb-1">
+                  {% if c.submission_type == "challenge" %}وصف التحدي{% else %}وصف الفكرة{% endif %}
+                </div>
+                <div class="text-sm text-slate-800">
+                  {% if c.submission_type == "challenge" %}
+                    {{ c.challenge_description|default:"-" }}
+                  {% else %}
+                    {{ c.idea_description|default:"-" }}
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- العمود 3 -->
+              <div class="col-span-1 flex flex-col gap-3">
+                <div class="bg-white border border-sky-100 rounded-xl p-2 overflow-auto">
+                  <div class="text-[11px] text-slate-500 mb-1">التقنيات المستخدمة</div>
+                  <div class="text-sm">
+                    {{ c.technologies_used|default:"-" }}
+                  </div>
+                </div>
+
+                <div class="bg-white border border-sky-100 rounded-xl p-2 overflow-auto flex-1">
+                  <div class="text-[11px] text-slate-500 mb-1">ملاحظات</div>
+                  <div class="text-sm">
+                    {% if c.submission_type == "challenge" %}
+                      {{ c.challenge_notes|default:"-" }}
+                    {% else %}
+                      {{ c.idea_notes|default:"-" }}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        {% empty %}
+          <div class="p-6 text-slate-500">لا توجد بوردات بعد. أضيفي أول مشاركة.</div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  // ===== Zoom =====
+  let scale = 1;
+  let tx = 0, ty = 0;
+  const stage = document.getElementById("stage");
+
+  function applyTransform() {
+    if (!stage) return;
+    stage.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`;
+  }
+
+  const zoomIn = document.getElementById("zoomIn");
+  const zoomOut = document.getElementById("zoomOut");
+  const zoomReset = document.getElementById("zoomReset");
+
+  zoomIn && (zoomIn.onclick = () => { scale = Math.min(2.2, scale + 0.1); applyTransform(); });
+  zoomOut && (zoomOut.onclick = () => { scale = Math.max(0.5, scale - 0.1); applyTransform(); });
+  zoomReset && (zoomReset.onclick = () => { scale = 1; tx = 0; ty = 0; applyTransform(); });
+
+  // ===== Drag cards =====
+  let dragging = null, startX = 0, startY = 0, startL = 0, startT = 0;
+
+  document.querySelectorAll(".card").forEach(card => {
+    card.addEventListener("pointerdown", (e) => {
+      if (e.target.closest("button")) return; // لا تسحب عند الضغط على زر
+      dragging = card;
+      card.setPointerCapture(e.pointerId);
+
+      startX = e.clientX;
+      startY = e.clientY;
+      startL = parseInt(card.style.left || "0");
+      startT = parseInt(card.style.top  || "0");
+    });
+
+    card.addEventListener("pointermove", (e) => {
+      if (!dragging || dragging !== card) return;
+
+      const dx = (e.clientX - startX) / scale;
+      const dy = (e.clientY - startY) / scale;
+
+      card.style.left = (startL + dx) + "px";
+      card.style.top  = (startT + dy) + "px";
+    });
+
+    card.addEventListener("pointerup", async (e) => {
+      if (!dragging || dragging !== card) return;
+      dragging = null;
+
+      const id = card.dataset.id;
+      const data = new URLSearchParams();
+      data.set("x", parseInt(card.style.left));
+      data.set("y", parseInt(card.style.top));
+      data.set("w", parseInt(card.style.width));
+      data.set("h", parseInt(card.style.height));
+
+      await fetch(`/board/layout/${id}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type":"application/x-www-form-urlencoded",
+          "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: data.toString()
+      });
+    });
+  });
+
+  // ===== Check (اعتماد/تشيك) =====
+  document.querySelectorAll(".checkBtn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const card = btn.closest(".card");
+      const id = card.dataset.id;
+
+      const res = await fetch(`/board/approve/${id}/`, {
+        method: "POST",
+        headers: {"X-CSRFToken": getCookie("csrftoken")}
+      });
+
+      if (!res.ok) {
+        const t = await res.text();
+        alert("فشل الاعتماد: " + res.status + "\n" + t);
+        return;
+      }
+
+      btn.className = "checkBtn px-2 py-1 rounded-lg text-xs border bg-green-600 text-white border-green-600";
+    });
+  });
+
+  // ===== Delete =====
+  document.querySelectorAll(".deleteBtn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const card = btn.closest(".card");
+      const id = card.dataset.id;
+
+      if (!confirm("  هل أنت متأكد من حذف هذه الفكرة من البورد؟ ")) return;
+
+      const res = await fetch(`/board/delete/${id}/`, {
+        method: "POST",
+        headers: {"X-CSRFToken": getCookie("csrftoken")}
+      });
+
+      if (!res.ok) {
+        const t = await res.text();
+        alert("فشل الحذف: " + res.status + "\n" + t);
+        return;
+      }
+
+      card.remove();
+    });
+  });
+
+  // ===== CSRF helper =====
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + "=")) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+{% endblock %}

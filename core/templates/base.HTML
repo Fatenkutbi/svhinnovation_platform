@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>منصة الابتكار - مستشفى الصحة الافتراضي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #D1EAF4; }
+        .bg-custom-dark { background-color: #0E506C; }
+        .bg-custom-medium { background-color: #608C9E; }
+        .text-custom-dark { color: #0E506C; }
+        .sidebar-item:hover { background-color: #608C9E; transition: 0.3s; }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+<header class="bg-custom-dark text-white py-1 shadow-md flex justify-between items-center px-10">
+    <div class="flex items-center gap-4">
+        <img src="/static/images/logosvvh.png" class="h-20 w-auto object-contain brightness-125 contrast-110" alt="Logo">
+        
+        <div class="border-r border-white/30 pr-4">
+            <h1 class="text-xl font-bold tracking-tight">مستشفى الصحة الافتراضي</h1>
+            <p class="text-[11px] opacity-80 font-light leading-tight">منصة إدارة الابتكار</p>
+        </div>
+    </div>
+</header>
+
+    <div class="flex flex-1 overflow-hidden">
+        
+       <aside class="w-56 bg-custom-dark text-white flex flex-col shadow-xl">
+    <nav class="flex-1 pt-10">
+        <ul class="space-y-2">
+            <li><a href="/dashboard/" class="sidebar-item block py-3 px-6 flex items-center gap-3 text-sm">📊 لوحة التحكم</a></li>
+            <li><a href="/submissions/" class="sidebar-item block py-3 px-6 flex items-center gap-3 text-sm">التحديات والمبادرات</a></li>
+            <li><a href="/board/" class="sidebar-item block py-3 px-6 flex items-center gap-3 text-sm">📋 لوحة الورشة</a></li>
+            <li><a href="/excel/" class="sidebar-item block py-3 px-6 flex items-center gap-3 text-sm">📥 تقارير إكسل</a></li>
+            <li><a href="/powerbi/" class="sidebar-item block py-3 px-6 flex items-center gap-3 text-sm">📈 مؤشرات الأداء</a></li>
+            <li class="sidebar-item"> 
+                <a href="/platform2/" class="block py-3 px-6 flex items-center gap-3 text-sm" target="_blank"> 
+                    <i class="fas fa-external-link-alt text-xs"></i> <span>منصة الابتكار ✨</span> 
+                </a> 
+            </li>
+        </ul>
+    </nav>
+</aside>
+        <main class="flex-1 p-8 overflow-y-auto">
+            <div class="max-w-6xl mx-auto">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+
+    </div>
+</body>
+</html>

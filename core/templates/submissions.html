@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-4">التحديات والمبادرات</h1>
+
+<div class="overflow-x-auto">
+  <table class="bg-white w-full shadow rounded overflow-hidden text-sm">
+    <tr class="bg-blue-200 text-center">
+      <th class="p-3">العنوان</th>
+      <th class="p-3">النوع</th>
+      <th class="p-3">الإدارة / القسم</th>
+      <th class="p-3">المجال</th>
+      <th class="p-3">التأثير</th>
+      <th class="p-3">الحالة</th>
+      <th class="p-3">الوصف</th>
+      <th class="p-3">الحل المقترح</th>
+      <th class="p-3">الملاحظات</th>
+      <th class="p-3">التقنيات المستخدمة</th>
+      <th class="p-3">قائد الفكرة / الفريق</th>
+      <th class="p-3">مرحلة الفكرة</th>
+      <th class="p-3">تاريخ الإضافة</th>
+    </tr>
+
+    {% for item in data %}
+    <tr class="border-t align-top text-center">
+      <td class="p-3 font-semibold">
+        {% if item.challenge_title %}
+          {{ item.challenge_title }}
+        {% elif item.idea_name %}
+          {{ item.idea_name }}
+        {% else %}
+          بدون عنوان
+        {% endif %}
+      </td>
+
+      <td class="p-3">{{ item.get_submission_type_display }}</td>
+
+      <td class="p-3">
+        {% if item.administration_department %}
+          {{ item.get_administration_department_display }}
+        {% else %}
+          —
+        {% endif %}
+      </td>
+
+      <td class="p-3">
+        {% if item.domain %}
+          {{ item.get_domain_display }}
+        {% else %}
+          —
+        {% endif %}
+      </td>
+
+      <td class="p-3">{{ item.get_impact_display }}</td>
+
+      <td class="p-3">
+        {% if item.status %}
+          {{ item.get_status_display }}
+        {% else %}
+          —
+        {% endif %}
+      </td>
+
+      <td class="p-3">
+        {% if item.challenge_description %}
+          {{ item.challenge_description }}
+        {% elif item.idea_description %}
+          {{ item.idea_description }}
+        {% else %}
+          —
+        {% endif %}
+      </td>
+
+      <td class="p-3">
+        {% if item.suggested_solution %}
+          {{ item.suggested_solution }}
+        {% else %}
+          —
+        {% endif %}
+      </td>
+
+      <td class="p-3">
+        {% if item.challenge_notes %}
+          {{ item.challenge_notes }}
+        {% elif item.idea_notes %}
+          {{ item.idea_notes }}
+        {% else %}
+          —
+        {% endif %}
+      </td>
+
+      <td class="p-3">
+        {% if item.technologies_used %}
+          {{ item.technologies_used }}
+        {% else %}
+          —
+        {% endif %}
+      </td>
+
+      <td class="p-3">
+        {% if item.idea_leader_or_team %}
+          {{ item.idea_leader_or_team }}
+        {% else %}
+          —
+        {% endif %}
+      </td>
+
+      <td class="p-3">
+        {% if item.idea_stage %}
+          {{ item.get_idea_stage_display }}
+        {% else %}
+          —
+        {% endif %}
+      </td>
+
+      <td class="p-3">{{ item.created_at|date:"Y-m-d H:i" }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="13" class="p-4 text-center text-gray-500">
+        لا توجد بيانات حتى الآن
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

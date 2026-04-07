@@ -1,0 +1,158 @@
+{% extends "innovation/base.html" %}
+{% block title %}إضافة مشاركة | منصة الابتكار{% endblock %}
+
+{% block body %}
+<section class="max-w-5xl mx-auto px-4 py-10">
+  <div class="flex items-end justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-extrabold text-sky-950">إضافة مشاركة</h1>
+      
+    </div>
+<a href="{% url 'platform2:home' %}" class="px-4 py-2 rounded-xl bg-white border border-sky-200 hover:bg-sky-50 text-sm">
+  ← رجوع
+</a>  </div>
+
+  {% if form.errors %}
+  <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl mb-4">
+    <div class="font-bold mb-2">فيه حقول ناقصة أو غير صحيحة:</div>
+    {{ form.errors }}
+  </div>
+{% endif %}
+
+  <form method="POST" class="mt-6 bg-white border border-sky-100 rounded-3xl p-6">
+    {% csrf_token %}
+
+    <!-- النوع + مشتركة -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-2"> نوع المشاركة</label>
+        {{ form.submission_type }}
+      </div>
+      <div>
+  <label class="block text-sm font-medium mb-2">الإدارة / القسم</label>
+  {{ form.administration_department }}
+</div> 
+      <div>
+        <label class="block text-sm font-medium mb-2">المجال</label>
+        {{ form.domain }}
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-2">مستوى التأثير</label>
+        {{ form.impact }}
+      </div>
+    </div>
+
+    <!-- تحدي -->
+    <div id="challengeSection" class="mt-8">
+      <h2 class="text-xl font-bold text-sky-950">نموذج التحدي</h2>
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-2">التاريخ</label>
+          {{ form.challenge_date }}
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-2">عنوان التحدي</label>
+          {{ form.challenge_title }}
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-2">وصف التحدي</label>
+          {{ form.challenge_description }}
+        </div>
+        <div class="md:col-span-2 flex items-center gap-2">
+          {{ form.has_suggested_solution }}
+          <label class="text-sm font-medium">هل يوجد حل مقترح؟</label>
+        </div>
+        <div class="md:col-span-2" id="solutionWrap">
+          <label class="block text-sm font-medium mb-2">وصف الحل المقترح</label>
+          {{ form.suggested_solution }}
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-2">ملاحظات</label>
+          {{ form.challenge_notes }}
+        </div>
+      </div>
+    </div>
+
+    <!-- فكرة/حل -->
+    <div id="ideaSection" class="mt-8">
+      <h2 class="text-xl font-bold text-sky-950">نموذج الفكرة/الحل</h2>
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-2">اسم الفكرة</label>
+          {{ form.idea_name }}
+        </div>
+        <div id="ideaFields">
+  <div>
+    <label class="block text-sm font-semibold mb-2 text-right">الحالة</label>
+    {{ form.status }}
+  </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-2">تاريخ الإطلاق</label>
+          {{ form.idea_launch_date }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-2">قائد الفكرة / الفريق</label>
+          {{ form.idea_leader_or_team }}
+        </div>
+       <div class="space-y-6">
+
+    
+    <div>
+      <label class="block text-sm font-semibold text-slate-700 mb-2 text-right">
+        التقنيات المستخدمة
+      </label>
+      {{ form.technologies_used }}
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-slate-700 mb-2 text-right">
+        التحديات
+      </label>
+      {{ form.challenge_notes }}
+    </div>
+
+  </div>
+</div> 
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-2">ملاحظات</label>
+          {{ form.idea_notes }}
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 flex gap-3">
+      <button class="flex-1 px-5 py-3 rounded-2xl bg-sky-600 text-white hover:bg-sky-700">حفظ</button>
+<a class="flex-1 text-center px-5 py-3 rounded-2xl bg-white border border-sky-200 hover:bg-sky-50"
+   href="{% url 'platform2:home' %}">
+  إلغاء
+</a>    </div>
+  </form>
+</section>
+
+<script>
+  const typeSelect = document.getElementById("id_submission_type");
+  const challengeSection = document.getElementById("challengeSection");
+  const ideaSection = document.getElementById("ideaSection");
+
+  const hasSol = document.getElementById("id_has_suggested_solution");
+  const solWrap = document.getElementById("solutionWrap");
+
+  function toggleType() {
+    const v = typeSelect.value;
+    challengeSection.classList.toggle("hidden", v !== "challenge");
+    ideaSection.classList.toggle("hidden", v !== "idea");
+  }
+
+  function toggleSolution() {
+    if (!hasSol) return;
+    solWrap.classList.toggle("hidden", !hasSol.checked);
+  }
+
+  typeSelect.addEventListener("change", toggleType);
+  hasSol?.addEventListener("change", toggleSolution);
+
+  toggleType();
+  toggleSolution();
+</script>
+{% endblock %}
