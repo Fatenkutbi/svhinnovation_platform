@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto rtl">
+    <h2 class="text-3xl font-bold text-[#0E506C] mb-8 border-r-4 border-[#608C9E] pr-4">لوحة ورشة العمل التفاعلية</h2>
+
+    <div class="bg-white p-8 rounded-3xl shadow-lg mb-12 border border-blue-100">
+        <h3 class="text-xl font-bold mb-6 text-[#0E506C] flex items-center gap-2">
+            <span>📍</span> إدراج بطاقة عمل جديدة للورشة
+        </h3>
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-bold text-[#608C9E]">عنوان التحدي أو الفكرة</label>
+                    <input type="text" name="title" placeholder="اكتبي العنوان هنا..." class="p-4 rounded-xl bg-[#D1EAF4]/30 border-none ring-1 ring-[#608C9E]/30 focus:ring-2 focus:ring-[#0E506C] outline-none transition-all" required>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-bold text-[#608C9E]">المرحلة</label>
+                    <select name="column" class="p-4 rounded-xl bg-[#D1EAF4]/30 border-none ring-1 ring-[#608C9E]/30 focus:ring-2 focus:ring-[#0E506C] outline-none appearance-none cursor-pointer font-bold text-[#0E506C]">
+                        <option value="define">مرحلة التحديد (Define)</option>
+                        <option value="ideate">مرحلة العصف الذهني (Ideate)</option>
+                        <option value="prototype">مرحلة النموذج الأولي (Prototype)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-bold text-[#608C9E]">التفاصيل</label>
+                <textarea name="content" rows="3" placeholder="اشرحي الفكرة باختصار..." class="w-full p-4 rounded-xl bg-[#D1EAF4]/30 border-none ring-1 ring-[#608C9E]/30 focus:ring-2 focus:ring-[#0E506C] outline-none transition-all" required></textarea>
+            </div>
+            <button class="w-full bg-[#0E506C] hover:bg-[#608C9E] text-white font-bold py-4 rounded-xl transition-all shadow-md active:scale-95">
+                إدراج الكارد الآن 🔥
+            </button>
+        </form>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-[#D1EAF4] p-6 rounded-3xl min-h-[500px] shadow-inner border-t-8 border-[#0E506C]">
+            <h3 class="text-center font-black text-[#0E506C] mb-6 text-lg tracking-widest">التحديد - DEFINE</h3>
+            <div class="space-y-4">
+                {% for item in define_items %}
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-r-4 border-[#0E506C] hover:shadow-md transition-shadow">
+                    <p class="font-bold text-[#0E506C] mb-2">{{ item.title }}</p>
+                    <p class="text-sm text-gray-600 leading-relaxed">{{ item.content }}</p>
+                </div>
+                {% empty %}
+                <p class="text-center text-[#608C9E] text-sm italic">لا توجد بطاقات حالياً</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="bg-[#BBDDEB] p-6 rounded-3xl min-h-[500px] shadow-inner border-t-8 border-[#608C9E]">
+            <h3 class="text-center font-black text-[#0E506C] mb-6 text-lg tracking-widest">الأفكار - IDEATE</h3>
+            <div class="space-y-4">
+                {% for item in ideate_items %}
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-r-4 border-[#608C9E] hover:shadow-md transition-shadow">
+                    <p class="font-bold text-[#0E506C] mb-2">{{ item.title }}</p>
+                    <p class="text-sm text-gray-600 leading-relaxed">{{ item.content }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="bg-[#A7CDDB] p-6 rounded-3xl min-h-[500px] shadow-inner border-t-8 border-[#D1EAF4]">
+            <h3 class="text-center font-black text-[#0E506C] mb-6 text-lg tracking-widest">النموذج - PROTOTYPE</h3>
+            <div class="space-y-4">
+                {% for item in prototype_items %}
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-r-4 border-blue-200 hover:shadow-md transition-shadow">
+                    <p class="font-bold text-[#0E506C] mb-2">{{ item.title }}</p>
+                    <p class="text-sm text-gray-600 leading-relaxed">{{ item.content }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

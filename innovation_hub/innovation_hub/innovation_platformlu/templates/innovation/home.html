@@ -1,0 +1,159 @@
+{% extends "innovation/base.html" %}
+{% block title %}منصة إدارة الابتكار | مستشفى صحة الافتراضي{% endblock %}
+
+{% block body %}
+
+<!-- HERO -->
+<section class="relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-b from-sky-100 via-sky-50 to-sky-50"></div>
+
+  <div class="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-sky-300/40 blur-3xl floaty"></div>
+  <div class="absolute top-10 -right-24 h-72 w-72 rounded-full bg-cyan-300/30 blur-3xl floaty" style="animation-delay:1.2s"></div>
+
+  <div class="relative max-w-6xl mx-auto px-4 py-14 md:py-20">
+    <div class="text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 border border-sky-100 text-xs text-sky-700">
+        ✨ منصة إدارة الابتكار لدعم إبداعكم وتيسير أعمالكم
+      </div>
+
+      <h1 class="mt-4 text-3xl md:text-5xl font-extrabold text-sky-950 leading-snug">
+من تحدٍ… إلى حل ابتكاري يخدم الرعاية الصحية      </h1>
+
+      <p class="mt-4 text-slate-700 leading-relaxed max-w-3xl mx-auto">
+منصة داخلية لاكتشاف التحديات وتحويلها لمبادرات قابلة للتطبيق      </p>
+
+      <div class="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+
+        <a href="/room/" class="px-6 py-3 rounded-2xl bg-sky-900 text-white hover:bg-sky-800 text-center font-semibold">
+    🧩 الدخول إلى بورد الاجتماع
+  </a>
+  
+        <a href="/submit/" class="px-6 py-3 rounded-2xl bg-sky-600 text-white hover:bg-sky-700 text-center font-semibold">
+          ➕ إضافة مشاركة
+        </a>
+        <!-- <a href="#about" class="px-6 py-3 rounded-2xl bg-white border border-sky-200 hover:bg-sky-50 text-center font-semibold">
+          💡 عن المنصة
+        </a> -->
+      </div>
+    </div>
+
+    <!-- إحصائيات كبيرة (بدون مثال) -->
+    <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <div class="bg-white/90 border border-sky-100 rounded-3xl p-6 shadow-sm">
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-slate-500">التحديات</div>
+          <div class="text-xl">⚠️</div>
+        </div>
+        <div class="mt-4 text-6xl font-extrabold tracking-tight text-sky-900">
+          {{ counts.challenges|default:"0" }}
+        </div>
+        <div class="mt-1 text-xs text-slate-500">إجمالي التحديات المسجلة</div>
+      </div>
+
+      <div class="bg-white/90 border border-sky-100 rounded-3xl p-6 shadow-sm">
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-slate-500">الأفكار</div>
+          <div class="text-xl">💡</div>
+        </div>
+        <div class="mt-4 text-6xl font-extrabold tracking-tight text-sky-900">
+          {{ counts.ideas|default:"0" }}
+        </div>
+        <div class="mt-1 text-xs text-slate-500">حلول ومقترحات تحسين</div>
+      </div>
+
+      <div class="bg-white/90 border border-sky-100 rounded-3xl p-6 shadow-sm">
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-slate-500">ابتكارات مكتملة</div>
+          <div class="text-xl">🏁</div>
+        </div>
+        <div class="mt-4 text-6xl font-extrabold tracking-tight text-sky-900">
+          {{ counts.innovations|default:"0" }}
+        </div>
+        <div class="mt-1 text-xs text-slate-500">تم إنجازها واعتمادها</div>
+      </div>
+
+      <div class="bg-white/90 border border-sky-100 rounded-3xl p-6 shadow-sm">
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-slate-500">قيد التنفيذ</div>
+          <div class="text-xl">⏳</div>
+        </div>
+        <div class="mt-4 text-6xl font-extrabold tracking-tight text-sky-900">
+          {{ counts.ideas_in_progress|default:"0" }}
+        </div>
+        <div class="mt-1 text-xs text-slate-500">أفكار لم تكتمل بعد</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="max-w-6xl mx-auto px-4 py-14">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="md:col-span-1">
+      <h2 class="text-2xl font-bold text-sky-950">عن المنصة</h2>
+      <p class="mt-2 text-slate-600 text-sm leading-relaxed">
+        منصة داخلية تستقبل التحديات والأفكار من الأقسام، وتعرضها بشكل منظم يساعد فريق الابتكار على الفرز والمتابعة ورفع التقارير.
+      </p>
+    </div>
+
+    <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="bg-white border border-sky-100 rounded-2xl p-5">
+        <div class="text-2xl">🧩</div>
+        <div class="mt-2 font-semibold">تجميع موحّد</div>
+        <p class="mt-1 text-sm text-slate-600">بدل التشتت… مدخل واحد لكل التحديات والأفكار.</p>
+      </div>
+
+      <div class="bg-white border border-sky-100 rounded-2xl p-5">
+        <div class="text-2xl">📌</div>
+        <div class="mt-2 font-semibold">تسهيل الفرز</div>
+        <p class="mt-1 text-sm text-slate-600">تصنيف حسب الإدارة/المجال/التأثير لتسريع القرار.</p>
+      </div>
+
+      <div class="bg-white border border-sky-100 rounded-2xl p-5">
+        <div class="text-2xl">🗂️</div>
+        <div class="mt-2 font-semibold">متابعة الحالة</div>
+        <p class="mt-1 text-sm text-slate-600">جديد → مراجعة → تنفيذ → منجز.</p>
+      </div>
+
+      <div class="bg-white border border-sky-100 rounded-2xl p-5">
+        <div class="text-2xl">📊</div>
+        <div class="mt-2 font-semibold">قياس بالأرقام</div>
+        <p class="mt-1 text-sm text-slate-600">إحصائيات واضحة تسهّل عرض النتائج.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="bg-white border-y border-sky-100">
+  <div class="max-w-6xl mx-auto px-4 py-14">
+    <h2 class="text-2xl font-bold text-sky-950 text-center">كيف تعمل المنصة؟</h2>
+
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="rounded-2xl border border-sky-100 bg-sky-50 p-5">
+        <div class="text-2xl">1️⃣</div>
+        <div class="mt-2 font-semibold">إضافة مشاركة</div>
+        <p class="mt-1 text-sm text-slate-600">تحدي أو فكرة عبر نموذج موحّد.</p>
+      </div>
+      <div class="rounded-2xl border border-sky-100 bg-sky-50 p-5">
+        <div class="text-2xl">2️⃣</div>
+        <div class="mt-2 font-semibold">مراجعة وفرز</div>
+        <p class="mt-1 text-sm text-slate-600">تقييم وتصنيف داخلي حسب الأثر.</p>
+      </div>
+      <div class="rounded-2xl border border-sky-100 bg-sky-50 p-5">
+        <div class="text-2xl">3️⃣</div>
+        <div class="mt-2 font-semibold">تنفيذ</div>
+        <p class="mt-1 text-sm text-slate-600">تحويل الأفكار إلى مبادرات قابلة للتطبيق.</p>
+      </div>
+      <div class="rounded-2xl border border-sky-100 bg-sky-50 p-5">
+        <div class="text-2xl">4️⃣</div>
+        <div class="mt-2 font-semibold">قياس وأثر</div>
+        <p class="mt-1 text-sm text-slate-600">متابعة مستمرة وعرض النتائج بالأرقام.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+/* لكي يفهم الإصدار الرابع مسارات ملفات Django الخاصة بكِ */
+@source "../../templates/**/*.html";
+@source "../../core/templates/**/*.html";
+@source "../../innovation_platformlu/templates/**/*.html";
+
+/* هنا يمكنكِ إضافة ألوانكِ الخاصة إذا أردتِ */
+@theme {
+  --color-custom-dark: #0E506C;
+  --color-custom-medium: #608C9E;
+}

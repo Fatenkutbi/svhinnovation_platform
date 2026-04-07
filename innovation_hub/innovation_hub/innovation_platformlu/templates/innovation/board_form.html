@@ -1,0 +1,124 @@
+{% extends "innovation/base.html" %}
+{% block title %}إضافة Board{% endblock %}
+
+{% block body %}
+<section class="max-w-6xl mx-auto px-4 py-10">
+  <div class="flex items-center justify-between mb-5">
+    <h1 class="text-2xl font-extrabold text-sky-950">
+      {% if mode == "challenge" %}إضافة تحدي/مشكلة{% else %}إضافة فكرة/حل{% endif %}
+    </h1>
+    <a href="{% url 'board' %}" class="px-4 py-2 rounded-xl bg-white border border-sky-200 hover:bg-sky-50">رجوع للبورد</a>
+  </div>
+
+  {% if form.errors %}
+    <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl mb-4">{{ form.errors }}</div>
+  {% endif %}
+
+  <form method="POST" class="bg-white border border-sky-100 rounded-3xl p-6">
+    {% csrf_token %}
+
+    <!-- ✅ لوحة الابتكار: كل شيء داخلها -->
+    <div class="border border-sky-200 rounded-3xl p-5 bg-sky-50">
+      <div class="text-sm font-semibold text-slate-700 mb-4">لوحة الابتكار</div>
+
+      <!-- ✅ المعلومات العامة داخل اللوحة -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-semibold mb-2">الإدارة/القسم</label>
+          {{ form.department }}
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-2">المجال</label>
+          {{ form.domain }}
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-2">مستوى الأثر</label>
+          {{ form.impact }}
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-2">
+            {% if mode == "challenge" %}تاريخ التحدي{% else %}تاريخ الإطلاق{% endif %}
+          </label>
+          {% if mode == "challenge" %}
+            {{ form.challenge_date }}
+          {% else %}
+            {{ form.idea_launch_date }}
+          {% endif %}
+        </div>
+      </div>
+
+      {% if mode == "idea" %}
+        <div class="mb-6">
+          <label class="block text-sm font-semibold mb-2">الحالة</label>
+          {{ form.status }}
+        </div>
+      {% endif %}
+
+      <!-- ✅ جسم اللوحة -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        
+        <!-- العمود 1 -->
+        <div class="flex flex-col gap-4">
+          <div class="bg-white rounded-2xl border border-sky-100 p-3">
+            <div class="text-xs text-slate-500 mb-2">
+              {% if mode == "challenge" %} عنوان التحدي {% else %}اسم الفكرة{% endif %}
+            </div>
+            {% if mode == "challenge" %}
+             {{ form.challenge_title }}
+            {% else %}
+              {{ form.idea_name }}
+            {% endif %}
+          </div>
+
+          <div class="bg-white rounded-2xl border border-sky-100 p-3 flex-1">
+            <div class="text-xs text-slate-500 mb-2">
+              {% if mode == "challenge" %} الحل المقترح{% else %}قائد الفكرة{% endif %}
+            </div>
+            {% if mode == "challenge" %}
+             {{ form.suggested_solution }}
+            {% else %}
+              {{ form.idea_leader_or_team }}
+            {% endif %}
+          </div>
+        </div>
+  <!-- العمود 2 -->
+        <div class="bg-white rounded-2xl border border-sky-100 p-3">
+          <div class="text-xs text-slate-500 mb-2">
+            {% if mode == "challenge" %}وصف التحدي{% else %}وصف الفكرة{% endif %}
+          </div>
+          {% if mode == "challenge" %}
+            {{ form.challenge_description }}
+          {% else %}
+            {{ form.idea_description }}
+          {% endif %}
+        </div>
+
+        <!-- العمود 3 -->
+        <div class="flex flex-col gap-4">
+          <div class="bg-white rounded-2xl border border-sky-100 p-3">
+            <div class="text-xs text-slate-500 mb-2">التقنيات المستخدمة</div>
+            {{ form.technologies_used }}
+          </div>
+
+          <div class="bg-white rounded-2xl border border-sky-100 p-3 flex-1">
+            <div class="text-xs text-slate-500 mb-2">ملاحظات</div>
+            {% if mode == "challenge" %}
+              {{ form.challenge_notes }}
+            {% else %}
+              {{ form.idea_notes }}
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-end">
+      <button class="px-6 py-3 rounded-2xl bg-sky-600 text-white hover:bg-sky-700 font-semibold">
+        حفظ وإضافة للبورد
+      </button>
+    </div>
+  </form>
+</section>
+{% endblock %}
